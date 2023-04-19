@@ -21,19 +21,19 @@ jobs:
           - goarch: arm64
             goos: darwin
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@main
     - name: Set up Go
       uses: actions/setup-go@v3
       with: 
         go-version: 1.20.3
-    - name: Making kubectl-karmada
-      run: make kubectl-karmada
+    - name: Making zeus-server
+      run: make zeus-server
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
         
     - name: Packaging...
-      run: tar czf kubectl-karmada-${{ matrix.goos }}-${{ matrix.goarch }}.tgz kubectl-karmada LICENSE
+      run: tar czf zeus-${{ matrix.goos }}-${{ matrix.goarch }}.tgz 
     - name: Uploading assets...
       if: ${{ !env.ACT }}
       id: upload-release-asset 
@@ -42,6 +42,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./kubectl-karmada-${{ matrix.goos }}-${{ matrix.goarch }}.tgz
-        asset_name: kubectl-karmada-${{ matrix.goos }}-${{ matrix.goarch }}.tgz
+        asset_path: ./zeus-server-${{ matrix.goos }}-${{ matrix.goarch }}.tgz
+        asset_name: zeus-server-${{ matrix.goos }}-${{ matrix.goarch }}.tgz
         asset_content_type: application/gzip
