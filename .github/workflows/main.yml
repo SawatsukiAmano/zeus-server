@@ -2,8 +2,7 @@ name: Release
 
 on:
   release:
-    types: [published]
-    branches: [ main ]
+    types: [created]
     
 jobs:
   build-upload:
