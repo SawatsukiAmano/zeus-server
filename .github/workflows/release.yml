@@ -12,6 +12,7 @@ jobs:
     
     strategy:
       matrix:
+        os: [ubuntu-latest]
         include:
           - goarch: amd64
             goos: linux
