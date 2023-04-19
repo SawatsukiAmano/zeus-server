@@ -6,9 +6,10 @@ on:
     branches: [ main ]
     
 jobs:
-  build:
+  build-upload:
+    name: Package software on thre platforms and upload
     runs-on: ${{ matrix.os }}
-    # 声明策略，可以遍历在多环境、不同系统内循环构建 交叉编译
+    
     strategy:
       matrix:
         include:
@@ -20,12 +21,16 @@ jobs:
             goos: linux
           - goarch: arm64
             goos: darwin
+            
     steps:
-    - uses: actions/checkout@main
+    # 检出仓库
+    - uses: actions/checkout@v3
+    # 设置环境
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v4
       with: 
         go-version: 1.20.3
+        
     - name: Making zeus-server
       run: make zeus-server
       env:
@@ -33,7 +38,8 @@ jobs:
         GOARCH: ${{ matrix.goarch }}
         
     - name: Packaging...
-      run: tar czf zeus-${{ matrix.goos }}-${{ matrix.goarch }}.tgz 
+      run: tar czf zeus-server-${{ matrix.goos }}-${{ matrix.goarch }}.tgz 
+      
     - name: Uploading assets...
       if: ${{ !env.ACT }}
       id: upload-release-asset 
