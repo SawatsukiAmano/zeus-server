@@ -6,8 +6,8 @@ GO_VERSION := $(shell go version)
 
 BINARY_NAME = zeus-server
 
-GOOS := linux darwin 
-GOARCHS := amd64   
+GOOS := linux darwin freebsd
+GOARCHS := amd64 386 arm arm64
 
 hello:
 	echo "Hello"
