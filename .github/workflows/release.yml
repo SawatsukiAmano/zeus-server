@@ -1,9 +1,8 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "rc*.*.*"
+  release:
+    types: [created]
     
 jobs:
   build-upload:
