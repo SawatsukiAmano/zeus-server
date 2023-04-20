@@ -18,3 +18,8 @@ jobs:
         
     - name: Build go binaries
       run: make release
+
+    - uses: softprops/action-gh-release@v1
+      with:
+        files: 'bin/*'
+        prerelease: ${{ contains(env.GIT_TAG, 'rc') }}

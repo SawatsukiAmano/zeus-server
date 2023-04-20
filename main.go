@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,7 +14,15 @@ func getFileTxt(filePath string) (string, error) {
 	return string(content), err
 }
 
+var (
+	VERSION    string
+	BUILD_TIME string
+	GO_VERSION string
+)
+
 func main() {
+	ginModel := os.Getenv("GIN_MODE")
+	fmt.Printf("%s\n%s\n%s\n%s\n", VERSION, BUILD_TIME, GO_VERSION, ginModel)
 	router := gin.Default()
 
 	DATAFILE := os.Getenv("DATAFILE")
@@ -21,10 +30,10 @@ func main() {
 		DATAFILE = "data/"
 	}
 
-	api := router.Group("/api")
+	v1 := router.Group("/v1")
 	{
 
-		api.GET("/data", func(c *gin.Context) {
+		v1.GET("/data", func(c *gin.Context) {
 			content, err := os.ReadFile(DATAFILE + "data.json")
 			if err != nil {
 				log.Println(err)
@@ -32,7 +41,7 @@ func main() {
 			c.Writer.WriteString(string(content))
 		})
 
-		api.GET("/config", func(c *gin.Context) {
+		v1.GET("/config", func(c *gin.Context) {
 			content, err := os.ReadFile(DATAFILE + "config.json")
 			if err != nil {
 				log.Println(err)
@@ -40,7 +49,7 @@ func main() {
 			c.Writer.WriteString(string(content))
 		})
 
-		api.PUT("/key", func(c *gin.Context) {
+		v1.PUT("/key", func(c *gin.Context) {
 			oldkey := c.PostForm("oldkey")
 			newkey := c.PostForm("newkey")
 			content, err := getFileTxt(DATAFILE + "key.txt")
@@ -65,7 +74,7 @@ func main() {
 			})
 		})
 
-		api.PUT("/data", func(c *gin.Context) {
+		v1.PUT("/data", func(c *gin.Context) {
 			key := c.PostForm("key")
 			content, err := getFileTxt(DATAFILE + "key.txt")
 			if string(content) != key {
@@ -87,7 +96,7 @@ func main() {
 			c.Writer.WriteString(string(content))
 		})
 
-		api.PUT("/config", func(c *gin.Context) {
+		v1.PUT("/config", func(c *gin.Context) {
 			key := c.PostForm("key")
 			content, err := getFileTxt(DATAFILE + "key.txt")
 			if string(content) != key {
