@@ -6,14 +6,14 @@ GO_VERSION := $(shell go version)
 
 BINARY_NAME = zeus-server
 
-GOOS := linux darwin freebsd
-GOARCHS := amd64 386 arm arm64
+GOOS := linux darwin 
+GOARCHS := amd64   
 
 hello:
 	echo "Hello"
 
 release:
-	sudo apt install zip -y
+	sudo apt-get install zip -y
 	export GO111MODULE=on
 	mkdir -p bin
 	$(foreach goos,$(GOOS),$(foreach goarch,$(GOARCHS),GOOS=$(goos) GOARCH=$(goarch) go build -ldflags "-w -s -X main.VERSION=$(VERSION) -X 'main.BUILD_TIME=$(NOW)' -X 'main.GO_VERSION=$(GO_VERSION)'" main.go;tar -czf bin/$(BINARY_NAME)-$(goos)-$(goarch).tar.gz main;))
