@@ -21,5 +21,7 @@ jobs:
       run: make release
     # 创建release
     - uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         files: 'bin/*'
